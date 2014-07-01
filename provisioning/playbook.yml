@@ -1,0 +1,63 @@
+- hosts: default
+  remote_user: vagrant
+  sudo: true
+  sudo_user: root
+
+  tasks:
+    ##
+    # Update apt packages
+    #
+    - name: General | Update apt packages.
+      apt: update_cache=yes
+
+    ##
+    # Apt package instalation of required software
+    #
+    - name: General | Install required packages.
+      apt: pkg={{ item }} state=present
+      with_items:
+        - build-essential
+        - php5
+        - apache2
+        - php5-mysql
+        - sendmail
+        - php5-mcrypt
+        - php5-curl
+        - php5-gd
+
+
+    ##
+    # Apache2 setup
+    #
+    - name: Apache | Enable required modules
+      action: command a2enmod rewrite vhost_alias
+
+    - name: Apache | Configuration file for our site
+      action: template src=templates/etc-apache2-sites-available-website-conf.j2 dest=/etc/apache2/sites-available/website.conf
+
+    - name: Apache | Disable the default site
+      action: command a2dissite 000-default
+
+    - name: Apache | Enable our new site
+      action: command a2ensite website
+      notify:
+        - Restart Apache
+
+    - name: PHP | Enable required modules
+      action: command php5enmod mcrypt
+      notify:
+        - Restart Apache
+
+    ##
+    # Website setup
+    #
+    - name: Website | Set up file and directory permissions
+      file: path=/vagrant/ mode=0777 recurse=yes state=directory
+      sudo: yes
+
+  ##
+  # Restart services
+  #
+  handlers:
+    - name: Restart Apache
+      service: name=apache2 state=restarted
