@@ -4,6 +4,7 @@ VM for develop
 ## Instructions installing development environment
 
 ### Install required software for the virtual machine (once pr computer)
+
 1. Install VirtualBox (<https://www.virtualbox.org/wiki/Downloads>)
 
 2. Install Vagrant (<http://www.vagrantup.com/>)
@@ -21,6 +22,7 @@ VM for develop
 7. (Linux) Install Ansible (in Ubuntu sudo apt-get install ansible)
 
 8. Site will be available at http://vm-dev.com/
+
 ## Troubleshooting
 
 **Page not found**
