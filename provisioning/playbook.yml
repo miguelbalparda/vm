@@ -4,6 +4,14 @@
   sudo_user: root
 
   tasks:
+
+    ##
+    # Update apt packages and add php 7 repo
+    #
+    - name: Add repositories
+      apt_repository: repo='ppa:ondrej/php' state=present
+      sudo: yes
+
     ##
     # Update apt packages
     #
@@ -17,13 +25,22 @@
       apt: pkg={{ item }} state=present
       with_items:
         - build-essential
-        - php5
         - apache2
-        - php5-mysql
-        - sendmail
-        - php5-mcrypt
-        - php5-curl
-        - php5-gd
+        - mysql-server-5.6
+        - libapache2-mod-php7.0 
+        - php7.0 
+        - php7.0-common 
+        - php7.0-gd 
+        - php7.0-mysql 
+        - php7.0-mcrypt 
+        - php7.0-curl 
+        - php7.0-intl 
+        - php7.0-xsl 
+        - php7.0-mbstring 
+        - php7.0-zip 
+        - php7.0-bcmath 
+        - php7.0-iconv
+
 
 
     ##
@@ -42,12 +59,6 @@
       action: command a2ensite website
       notify:
         - Restart Apache
-
-    - name: PHP | Enable required modules
-      action: command php5enmod mcrypt
-      notify:
-        - Restart Apache
-
     ##
     # Website setup
     #
